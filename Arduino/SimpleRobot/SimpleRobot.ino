@@ -19,7 +19,7 @@ int updateRobot(void)
 	robot->controllerHook();
 	MicroOS::setGPoutInt(3,10*sin(M_PI*2.0f*millis()*0.001f));
 	MicroOS::setGPoutFloat(1,sin(2*M_PI*2.0f*millis()*0.001f));
-	MicroOS::setGPoutFloat(2,2.0f*sin(2*M_PI*2.0f*millis()*0.001f));
+	MicroOS::setGPoutFloat(2,(2.0f+MicroOS::getGPinFloat(0))*sin(2*M_PI*2.0f*millis()*0.001f));
 	return 0;
 }
 
