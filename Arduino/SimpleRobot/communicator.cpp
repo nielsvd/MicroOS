@@ -94,6 +94,17 @@ inline int Communicator::action(mavlink_message_t msg)
 			MicroOS::sendSystemRequest(THREADINFO);
 			break; }
 			
+		case MAVLINK_MSG_ID_GPIO:{
+			mavlink_gpio_t gpio;
+			mavlink_msg_gpio_decode(&msg,&gpio);
+		
+			for(uint8_t k=0;k<4;k++){
+				MicroOS::setGPinInt(k,gpio.gpio_int[k]);
+				MicroOS::setGPinFloat(k,gpio.gpio_float[k]);
+				MicroOS::setGPinFloat(k+4,gpio.gpio_float[k+4]);
+			}
+			break;}
+			
 		/*case INTERESTING_MSG_ID:{
 			//do something with the message
 			break; }
