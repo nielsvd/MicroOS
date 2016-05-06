@@ -14,23 +14,18 @@ Thread**				MicroOS::_threads;
 HALInterface* 			MicroOS::_hal;
 CommunicatorInterface* 	MicroOS::_communicator;
 
-int MicroOS::microOSControl(void)
+int MicroOS::microOSSlowLoop(void)
 {
 	handleSystemRequest();
 	_hal->onboardLedToggle();
-	
-	/*for(uint8_t k=0;k<_thread_count;k++){
-		Serial.print("ID: "); Serial.println(_threads[k]->getID());
-		Serial.print("Latency: "); Serial.println(_threads[k]->getLatency());
-		Serial.print("Duration: "); Serial.println(_threads[k]->getDuration());
-	}*/
+	_communicator->sendHeartbeat();
 	
 	return 0;
 }
 
-int MicroOS::communicatorControl(void)
+int MicroOS::microOSFastLoop(void)
 {
-	_communicator->update();
+	_communicator->sendGPIO();
 	return 0;
 }
 
@@ -61,13 +56,13 @@ uint8_t MicroOS::init(HALInterface* hal, CommunicatorInterface* communicator, ui
 	_hal = hal;
 	_hal->init();
 	_communicator = communicator;
-	_communicator->start();
+	_communicator->init();
 	
 	// Add the different standard threads
 	if((config & MICROOS_ONB_DISABLE) == 0)
-		addThread(BELOWNORMAL, MICROOS_CONTROL_PERIOD, &MicroOS::microOSControl, false, MICROOS_THREAD_ID);
+		addThread(BELOWNORMAL, MICROOS_SLOW_THREAD_PERIOD, &MicroOS::microOSSlowLoop, false, MICROOS_SLOW_THREAD_ID);
 	if((config & MICROOS_COM_DISABLE) == 0)
-		addThread(NORMAL, COMMUNICATION_CONTROL_PERIOD, &MicroOS::communicatorControl, false, COMMUNICATORCONTROL_ID);
+		addThread(NORMAL, MICROOS_FAST_THREAD_PERIOD, &MicroOS::microOSFastLoop, false, MICROOS_FAST_THREAD_ID);
 	//addThread(STEPPERCONTROL_PRIORITY, STEPPERCONTROL_TIME, &MicroOS::stepperControl, false, STEPPERCONTROL_ID);
 	
 	return 0;

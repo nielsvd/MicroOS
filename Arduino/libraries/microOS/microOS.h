@@ -16,10 +16,10 @@
 
 /*Defines with respect to the automatic threads: onboard and communication */
 
-#define MICROOS_THREAD_ID				100
-#define MICROOS_CONTROL_PERIOD			1000000	//1Hz
-#define COMMUNICATORCONTROL_ID			101
-#define COMMUNICATION_CONTROL_PERIOD	1000	//1kHz
+#define MICROOS_SLOW_THREAD_ID				100
+#define MICROOS_SLOW_THREAD_PERIOD			1000000	//1Hz
+#define MICROOS_FAST_THREAD_ID				101
+#define MICROOS_FAST_THREAD_PERIOD			10000	//100Hz
 
 #define MICROOS_I2C_ENABLE	1
 #define MICROOS_SPI_ENABLE	1<<1
@@ -81,8 +81,8 @@ public:
 	static Thread *thread(uint8_t ID);
 	//deleteThread();
 	
-	static int microOSControl(void);
-	static int communicatorControl(void);
+	static int microOSSlowLoop(void);
+	static int microOSFastLoop(void);
 	//static int stepperControl(void);
 
 	static void sendSystemRequest(uint8_t system_request);
