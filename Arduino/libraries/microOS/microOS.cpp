@@ -9,6 +9,7 @@ float					MicroOS::_gpout_float[8] = {0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f,0.0f};
 int32_t					MicroOS::_gpout_int[4] = {0,0,0,0};
 uint16_t 				MicroOS::_gpout_changed = 0;
 uint8_t 				MicroOS::_thread_count = 0;
+uint8_t 				MicroOS::_next_thread = 0;
 Thread**				MicroOS::_threads;
 HALInterface* 			MicroOS::_hal;
 CommunicatorInterface* 	MicroOS::_communicator;
@@ -195,6 +196,13 @@ void MicroOS::handleSystemRequest()
 										   _threads[k]->getTotalDuration(), _threads[k]->getTotalLatency(), _threads[k]->getNumberOfExecutions());
 			}
 		
+			break;}
+		case NEXTTHREADINFO:{
+			_communicator->sendThreadInfo(_threads[_next_thread]->getID(), _threads[_next_thread]->getName(), _threads[_next_thread]->getPriority(), 
+										  _threads[_next_thread]->getDuration(), _threads[_next_thread]->getLatency(), 
+										  _threads[_next_thread]->getTotalDuration(), _threads[_next_thread]->getTotalLatency(), _threads[_next_thread]->getNumberOfExecutions());
+			if(++_next_thread >= _thread_count)
+				_next_thread = 0;
 			break;}
 		case HWINFO:{
 			//do nothing for now

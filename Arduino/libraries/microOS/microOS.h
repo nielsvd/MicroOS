@@ -38,6 +38,7 @@ typedef enum system_info_t {
 typedef enum system_request_t {
 	NOREQUEST = 0,
 	THREADINFO,
+	NEXTTHREADINFO,
 	HWINFO
 } system_request_t;
 
@@ -57,7 +58,8 @@ private:
 	static int32_t					_gpout_int[4];
 	static uint16_t					_gpout_changed;
 
-	static uint8_t					_thread_count; 	
+	static uint8_t					_thread_count; 
+	static uint8_t					_next_thread;	
 	static Thread**					_threads;
 	
 	static HALInterface*			_hal;
