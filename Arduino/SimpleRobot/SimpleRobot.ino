@@ -25,6 +25,7 @@ int updateRobot(void)
 
 int slowHook(void)
 {
+	MicroOS::sendSystemRequest(NEXTTHREADINFO);
 	MicroOS::sendSystemRequest(THREADINFO);
 	return 0;
 }
