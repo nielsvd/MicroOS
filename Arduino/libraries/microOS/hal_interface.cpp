@@ -12,11 +12,6 @@ bool HALInterface::init()
 	return true;
 }
 
-void HALInterface::microOSUpdateHook()
-{
-	//do nothing
-}
-
 const uint8_t HALInterface::version()
 {
 	return _version;

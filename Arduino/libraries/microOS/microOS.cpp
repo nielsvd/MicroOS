@@ -18,7 +18,6 @@ int MicroOS::microOSControl(void)
 {
 	handleSystemRequest();
 	_hal->onboardLedToggle();
-	_hal->microOSUpdateHook();
 	
 	/*for(uint8_t k=0;k<_thread_count;k++){
 		Serial.print("ID: "); Serial.println(_threads[k]->getID());

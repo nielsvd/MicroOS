@@ -18,7 +18,6 @@ public:
 	HALInterface(const uint8_t onboard_led_pin = 0xFF, const uint8_t version = 0);
 	
 	virtual bool init();
-	virtual void microOSUpdateHook();
 	
 	const uint8_t version();
 	const uint8_t onboardLedPin();
