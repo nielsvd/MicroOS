@@ -39,6 +39,7 @@ bool Thread::start()
 	_active = true;
 	_scheduling_time = micros();
 	//_scheduling_time = 0;
+	(*_pFcn)();
 	return _active;
 }
 
