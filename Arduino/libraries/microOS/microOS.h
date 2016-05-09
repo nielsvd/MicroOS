@@ -71,8 +71,8 @@ public:
 	MicroOS();		
 	
 	static uint8_t init(HALInterface* hal, CommunicatorInterface* communicator, uint8_t config = 0);
-	static void start();
 	static void run();
+	static void start(system_start_t mode = SEQUENTIAL);
 	
 	static HALInterface*	hal();
 	
