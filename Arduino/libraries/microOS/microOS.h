@@ -26,6 +26,7 @@
 #define MICROOS_ONB_DISABLE	1<<2
 #define MICROOS_COM_DISABLE	1<<3
 
+
 typedef enum system_info_t {
 	NOINFO = 0, 		//nothing particular to report
 	BOOTING,			//state at startup
@@ -41,6 +42,11 @@ typedef enum system_request_t {
 	NEXTTHREADINFO,
 	HWINFO
 } system_request_t;
+
+typedef enum system_run_t {
+	PRIORITIZED = 0,
+	RESCHEDULED
+} system_run_t;
 
 /*
 	All static members to ensure there is only one copy of the OS!
@@ -60,6 +66,7 @@ private:
 
 	static uint8_t					_thread_count; 
 	static uint8_t					_next_thread;	
+	static uint8_t					_scheduled_thread;
 	static Thread**					_threads;
 	
 	static HALInterface*			_hal;
@@ -71,8 +78,8 @@ public:
 	MicroOS();		
 	
 	static uint8_t init(HALInterface* hal, CommunicatorInterface* communicator, uint8_t config = 0);
-	static void run();
 	static void start(system_start_t mode = SEQUENTIAL);
+	static void run(system_run_t mode = PRIORITIZED);
 	
 	static HALInterface*	hal();
 	

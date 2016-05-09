@@ -10,6 +10,7 @@ int32_t					MicroOS::_gpout_int[4] = {0,0,0,0};
 uint16_t 				MicroOS::_gpout_changed = 0;
 uint8_t 				MicroOS::_thread_count = 0;
 uint8_t 				MicroOS::_next_thread = 0;
+uint8_t 				MicroOS::_scheduled_thread = 0;
 Thread**				MicroOS::_threads;
 HALInterface* 			MicroOS::_hal;
 CommunicatorInterface* 	MicroOS::_communicator;
@@ -92,12 +93,27 @@ void MicroOS::start(const start_t mode)
 	}
 }
 
-void MicroOS::run()
+void MicroOS::run(const system_run_t mode)
 {
-	for(uint8_t k=0;k<_thread_count;k++){
-		if(_threads[k]->action()){
+	switch(mode){
+		case RESCHEDULED:{
+			if(_threads[_scheduled_thread]->action()){
+				for(uint8_t k=0;k<_thread_count;k++){
+					if(_threads[_scheduled_thread]->getWakeupTime() > _threads[k]->getWakeupTime()){
+						_scheduled_thread = k;
+					}
+				}
+				
+			}
+			break;}
+	
+		case PRIORITIZED:
+			for(uint8_t k=0;k<_thread_count;k++){
+				if(_threads[k]->action()){
+					break;
+				}
+			}
 			break;
-		}
 	}
 }
 
