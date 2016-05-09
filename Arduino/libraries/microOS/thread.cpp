@@ -34,13 +34,25 @@ Thread::Thread(priority_t priority, uint32_t period, int (*Fcn)(), char* name):
 	_pFcn = t._pFcn;
 }*/
 
-bool Thread::start()
+
+bool Thread::startSequential()
 {
 	_active = true;
 	_scheduling_time = micros();
-	//_scheduling_time = 0;
 	(*_pFcn)();
 	return _active;
+}
+
+bool Thread::startRegular(uint32_t scheduling_time)
+{
+	_active = true;
+	_scheduling_time = scheduling_time;
+	return _active;
+}
+
+bool Thread::start()
+{
+	startSequential();
 }
 
 bool Thread::idle()
@@ -102,6 +114,11 @@ uint8_t Thread::getID()
 char* Thread::getName()
 {
 	return _name;
+}
+
+uint32_t Thread::getPeriod()
+{
+	return _period;
 }
 
 priority_t Thread::getPriority()

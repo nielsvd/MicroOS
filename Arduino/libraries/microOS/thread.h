@@ -18,6 +18,11 @@ typedef enum priority_t{
 	HIGHEST
 } priority_t;
 
+typedef enum start_t {
+	SEQUENTIAL = 0,
+	REGULAR
+} system_start_t;
+
 class Thread
 {
 private:
@@ -36,12 +41,15 @@ private:
 		
 	int				(*_pFcn)();
 	
+	
 public:
 	Thread();
 	Thread(priority_t priority, uint32_t period, int (*Fcn)(), char* name = "");
 
 	//void operator=(const Thread t);
 
+	bool startSequential();
+	bool startRegular(uint32_t scheduling_time);
 	bool start();
 	bool idle();
 	bool sleep();
@@ -52,6 +60,7 @@ public:
 	uint8_t getID();
 	char* getName();
 	priority_t getPriority();
+	uint32_t getPeriod();
 	uint32_t getWakeupTime();
 	uint32_t getDuration();
 	uint32_t getLatency();
