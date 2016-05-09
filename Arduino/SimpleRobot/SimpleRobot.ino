@@ -38,10 +38,10 @@ void setup()
 	MicroOS::addThread(LOWEST, 2000000, &slowHook, false);
 	
 	robot->init();
-	MicroOS::start();
+	MicroOS::start(REGULAR);
 }
 
 void loop()
 {
-	MicroOS::run();
+	MicroOS::run(RESCHEDULED);
 }
