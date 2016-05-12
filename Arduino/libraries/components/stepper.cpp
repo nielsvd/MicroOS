@@ -32,10 +32,11 @@ int Stepper::update(float _dt)
 {
 	_position_integrator += _dt*_speed;
 	
-	if(_position_integrator>=1.0f){
+	while(_position_integrator>=1.0f){
 		this->stepCW();
 		_position_integrator -= 1.0f;
-	}else if(_position_integrator<=-1.0f){
+	}
+	while(_position_integrator<=-1.0f){
 		this->stepCCW();
 		_position_integrator += 1.0f;
 	}
