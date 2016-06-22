@@ -10,14 +10,14 @@
 #include <Wire.h>
 //#include <SPI.h>
 //#include "eeprom_m.h"
-#include "hal_interface.h"
+#include "hal_base.h"
 #include "communicator_interface.h"
 #include "thread.h"
 
 /*Defines with respect to the automatic threads: onboard and communication */
 
 #define MICROOS_SLOW_THREAD_ID				100
-#define MICROOS_SLOW_THREAD_PERIOD			1000000	//1Hz
+#define MICROOS_SLOW_THREAD_PERIOD			500000	//2Hz
 #define MICROOS_FAST_THREAD_ID				101
 #define MICROOS_FAST_THREAD_PERIOD			10000	//100Hz
 
@@ -69,19 +69,21 @@ private:
 	static uint8_t					_scheduled_thread;
 	static Thread**					_threads;
 	
-	static HALInterface*			_hal;
+	static HALBase*					_hal;
 	static CommunicatorInterface*	_communicator;
+	static uint8_t					_slowhook_splitcounter;
 	
 	static int findThread(uint8_t ID);
 	
 public:
 	MicroOS();		
 	
-	static uint8_t init(HALInterface* hal, CommunicatorInterface* communicator, uint8_t config = 0);
+	static uint8_t init(HALBase* hal, CommunicatorInterface* communicator, uint8_t config = 0);
+	static uint8_t init(CommunicatorInterface* communicator, uint8_t config = 0);
 	static void start(system_start_t mode = SEQUENTIAL);
 	static void run(system_run_t mode = PRIORITIZED);
 	
-	static HALInterface*	hal();
+	static HALBase*	hal();
 	
 	static uint8_t addThread(priority_t priority, uint32_t period, int (*Fcn)(), bool start, uint8_t ID=0);
 	static uint8_t addThread(Thread *thread);

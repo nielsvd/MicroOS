@@ -12,14 +12,24 @@ uint8_t 				MicroOS::_thread_count = 0;
 uint8_t 				MicroOS::_next_thread = 0;
 uint8_t 				MicroOS::_scheduled_thread = 0;
 Thread**				MicroOS::_threads;
-HALInterface* 			MicroOS::_hal;
+HALBase* 				MicroOS::_hal;
 CommunicatorInterface* 	MicroOS::_communicator;
+uint8_t					MicroOS::_slowhook_splitcounter = 0;
 
 int MicroOS::microOSSlowLoop(void)
 {
-	handleSystemRequest();
-	_hal->onboardLedToggle();
-	_communicator->sendHeartbeat();
+	switch(_slowhook_splitcounter){
+		case 0:
+			_hal->onboardLedToggle();
+			_communicator->sendHeartbeat();
+			break;
+		case 1:
+			handleSystemRequest();
+			break;
+	}
+	
+	if(++_slowhook_splitcounter > 1)
+		_slowhook_splitcounter = 0;
 	
 	return 0;
 }
@@ -27,6 +37,7 @@ int MicroOS::microOSSlowLoop(void)
 int MicroOS::microOSFastLoop(void)
 {
 	_communicator->sendGPIO();
+	_communicator->receive();
 	return 0;
 }
 
@@ -44,7 +55,7 @@ int MicroOS::microOSFastLoop(void)
 	return 0;
 }*/
 
-uint8_t MicroOS::init(HALInterface* hal, CommunicatorInterface* communicator, uint8_t config)
+uint8_t MicroOS::init(HALBase* hal, CommunicatorInterface* communicator, uint8_t config)
 {
 	
 
@@ -67,6 +78,11 @@ uint8_t MicroOS::init(HALInterface* hal, CommunicatorInterface* communicator, ui
 	//addThread(STEPPERCONTROL_PRIORITY, STEPPERCONTROL_TIME, &MicroOS::stepperControl, false, STEPPERCONTROL_ID);
 	
 	return 0;
+}
+
+uint8_t MicroOS::init(CommunicatorInterface* communicator, uint8_t config)
+{
+	MicroOS::init(new HALBase(),communicator,config);
 }
 
 void MicroOS::start(const start_t mode)
@@ -117,7 +133,7 @@ void MicroOS::run(const system_run_t mode)
 	}
 }
 
-HALInterface* MicroOS::hal()
+HALBase* MicroOS::hal()
 {
 	return _hal;
 }
