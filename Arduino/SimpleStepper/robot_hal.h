@@ -1,9 +1,9 @@
 #ifndef ROBOT_HAL_H
 #define ROBOT_HAL_H
 
-#include <hal_interface.h>
+#include <hal_base.h>
 
-class RobotHAL : public HALInterface
+class RobotHAL : public HALBase
 {
 public:
 	RobotHAL();

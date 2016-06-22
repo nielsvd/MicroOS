@@ -1,7 +1,7 @@
 #ifndef ROBOT_HAL_H
 #define ROBOT_HAL_H
 
-#include <hal_interface.h>
+#include <hal_base.h>
 #include <pololuMD08A.h>
 #include <analog_sensor.h>
 
@@ -12,7 +12,7 @@
 #define HBRIDGE_H1_PIN	2
 #define HBRIDGE_PWM_PIN	3
 
-class RobotHAL : public HALInterface
+class RobotHAL : public HALBase
 {
 private:
 	Sensor1D* 			_sensor;
