@@ -3,25 +3,24 @@
 
 #include "component_interface.h"
 
-//!  LED Class 
+//!  LED Class
 /*!
   Class incorporating the control of on-board leds.
 */
-class LED : public ComponentInterface
-{
-private:    
+class LED : public ComponentInterface {
+  private:
     /*LED attributes*/
-    uint8_t _pin;				/*!< Pin to which the led is connected. */ 
+    uint8_t _pin;				/*!< Pin to which the led is connected. */
     bool _on;              		/*!< Led state: true=on, false=off. (master control) */
 
     unsigned long _wake_up;
     uint16_t _on_time;
     uint16_t _off_time;
-    
-public:
+
+  public:
     //! LED constructor
     LED(uint8_t pin, uint8_t ID = 0);
-    
+
     ///////////////
     /// FUNCTIONAL
     bool init();
@@ -31,12 +30,14 @@ public:
     /// SET-METHODS
     void ledOn();
     void ledOff();
+    void toggle();
     uint8_t setSchedule(uint8_t duty_cycle, uint16_t period);
-    
+
     ///////////////
     /// GET-METHODS
     bool getOn();
-	uint16_t getOntime();
+    uint16_t getOntime();
+
 };
 
 //extern LED teensyLED;

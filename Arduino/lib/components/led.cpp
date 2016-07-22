@@ -11,31 +11,26 @@ LED::LED(uint8_t pin, uint8_t ID) :
 	//do nothing
 }
 
-bool LED::init()
-{
-	pinMode(_pin, OUTPUT);
-	
-	return true;
+bool LED::init() {
+  pinMode(_pin, OUTPUT);
+  return true;
 }
 
-void LED::update(){
-	if(millis()>_wake_up){
-		if(_on&&(_off_time!=0)){
-			_on = false;
-			digitalWrite(_pin, LOW);
-			_wake_up += _off_time;
-		}
-		else{ 
-			_on = true;
-			digitalWrite(_pin, HIGH); 
-			_wake_up += _on_time;
-		}
-	}
+void LED::update() {
+  if(millis()>_wake_up) {
+    if(_on) digitalWrite(_pin, HIGH);
+    else digitalWrite(_pin, LOW);
+  }
 }
-
 
 void LED::ledOn(){ _on = true; }
 void LED::ledOff(){ _on = false; }
+
+void LED::toggle() {
+  if(_on) _on = false;
+  else _on = true;
+  this->update();
+}
 
 uint8_t LED::setSchedule(uint8_t duty_cycle, uint16_t period){
 	if(period == 0){
@@ -46,10 +41,10 @@ uint8_t LED::setSchedule(uint8_t duty_cycle, uint16_t period){
 		_off_time = 0;//
 	}
 	else{
-		_on_time = (uint16_t)(period*duty_cycle)/100;
+		_on_time = (uint16_t)(period*duty_cycle)/100.0;
 		_off_time = (uint16_t)(period-_on_time);
 	}
-	
+
 	return 1;
 }
 

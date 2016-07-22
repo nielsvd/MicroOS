@@ -13,18 +13,18 @@ protected:
 
 public:
 	Sensor1D(uint8_t ID = 0);
-	
+
 	virtual int readRawValue();
 	virtual float readCalibratedValue();
 	int peekRawValue();
 	float peekCalibratedValue();
-	
+
 	void setRawValue(int raw_value);
 	void setCalibratedValue(float calibrated_value);
-	
+
 	void setScale(float scale);
 	void setOffset(int offset);
-	
+
 	float getScale();
 	int getOffset();
 
