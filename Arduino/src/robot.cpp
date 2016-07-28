@@ -25,7 +25,7 @@ Robot::Robot(uint8_t ID):
   // p11(0.0f),p12(0.0f),p13(0.0f),p21(0.0f),p22(0.0f),p23(0.0f),p31(0.0f),p32(0.0f),p33(0.0f),
   // x1(0.0f),x2(0.0f),x3(0.0f),
   // motor_FL(MOTOR_FL), motor_FR(MOTOR_FR), motor_RL(MOTOR_RL), motor_RR(MOTOR_RR),
-  _LED1(new LED(LED1_PIN)), _LED2(new LED(LED2_PIN)),
+  _LED1(new LED(LED1_PIN)), _LED2(new LED(LED2_PIN)), _pendulum_pot(new Vishay157(0)),
   cnt(0)
   {
     // do something else
@@ -36,6 +36,7 @@ void Robot::init(){
 
   _LED1->init();
   _LED2->init();
+  // pendulum_encoder.setup();
 
 }
 
@@ -49,6 +50,9 @@ void Robot::controllerHook() {
     cnt = 0;
     _LED1->toggle();
   }
+
+  MicroOS::setGPoutFloat(0,_pendulum_pot->readCalibratedValue());
+  MicroOS::setGPoutFloat(1,1000);
 
 }
 

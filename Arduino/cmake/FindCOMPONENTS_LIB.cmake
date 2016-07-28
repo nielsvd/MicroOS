@@ -1,5 +1,6 @@
 # define and include header files of components library
 set(COMPONENTS_LIB_FILES
+  absolute_encoder_bourns
   AF_motorshield
   analog_sensor
   component_interface
@@ -19,6 +20,7 @@ set(COMPONENTS_LIB_FILES
   sensor3D
   sharp41S
   stepper
+  vishay157
 )
 
 find_path(COMPONENTS_LIB_DIR
