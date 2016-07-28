@@ -2,10 +2,25 @@
 set(ARDUINO_LIB_NAMES
   Wire
   SPI
-  EEPROM
   SoftwareSerial
 )
 
+# find ARDUINO version
+find_file(ARDUINO_REVISIONS_PATH
+  NAMES revisions.txt
+  PATHS $ENV{ARDUINO_ROOT}
+)
+if(ARDUINO_REVISIONS_PATH)
+    file(READ ${ARDUINO_REVISIONS_PATH} ARD_VERSION)
+    if("${ARD_VERSION}" MATCHES "ARDUINO ([0-9]+).([0-9]+).([0-9]+)")
+        set(ARDUINO_SDK_VERSION_WORLD ${CMAKE_MATCH_1})
+        set(ARDUINO_SDK_VERSION_MAJOR ${CMAKE_MATCH_2})
+        set(ARDUINO_SDK_VERSION_MINOR ${CMAKE_MATCH_3})
+        message(STATUS "Found Arduino SDK version: ${ARDUINO_SDK_VERSION_WORLD}.${ARDUINO_SDK_VERSION_MAJOR}.${ARDUINO_SDK_VERSION_MINOR}")
+    endif()
+elseif()
+    message(SEND_ERROR "Could not find revisions.txt in order to detect Arduino SDK version.")
+endif()
 
 # find and include Arduino tools
 find_path(ARDUINO_TOOLS_DIR
@@ -43,7 +58,6 @@ if(ARDUINO_CORE_DIR)
     ${ARDUINO_CORE_DIR}/IPAddress.cpp
     ${ARDUINO_CORE_DIR}/Tone.cpp
     ${ARDUINO_CORE_DIR}/HardwareSerial2.cpp
-    ${ARDUINO_CORE_DIR}/HID.cpp
     ${ARDUINO_CORE_DIR}/Print.cpp
     ${ARDUINO_CORE_DIR}/new.cpp
     ${ARDUINO_CORE_DIR}/HardwareSerial0.cpp
@@ -54,6 +68,15 @@ if(ARDUINO_CORE_DIR)
     ${ARDUINO_CORE_DIR}/Stream.cpp
     ${ARDUINO_CORE_DIR}/CDC.cpp
   )
+  if((${ARDUINO_SDK_VERSION_WORLD} EQUAL 1) AND (${ARDUINO_SDK_VERSION_MAJOR} EQUAL 6))
+    set(ARDUINO_CORE_SOURCES
+      ${ARDUINO_CORE_SOURCES}
+      ${ARDUINO_CORE_DIR}/wiring_pulse.S
+    )
+  endif()
+  if((${ARDUINO_SDK_VERSION_WORLD} EQUAL 1) AND (${ARDUINO_SDK_VERSION_MAJOR} EQUAL 7))
+    set(ARDUINO_CORE_SOURCES ${ARDUINO_CORE_SOURCES} ${ARDUINO_CORE_DIR}/HID.cpp)
+  endif()
 else()
   message(SEND_ERROR "Could not find Arduino AVR cores include dir.")
 endif()
@@ -76,26 +99,29 @@ endif()
 
 # include Arduino libraries that are needed
 find_path(ARDUINO_LIB_DIR
-  Wire/Wire.h
+  NAMES Wire/Wire.h Wire/src/Wire.h
   HINTS $ENV{ARDUINO_ROOT}/hardware/arduino/avr/libraries
 )
 
 if(ARDUINO_LIB_DIR)
   message(STATUS "Found Arduino library dir: ${ARDUINO_LIB_DIR}")
+  if((${ARDUINO_SDK_VERSION_WORLD} EQUAL 1) AND (${ARDUINO_SDK_VERSION_MAJOR} EQUAL 6))
+    set(ARDUINO_LIB_PATH_SRC "/src")
+  endif()
   foreach(subdir ${ARDUINO_LIB_NAMES})
-    set(LIB_FILE "${ARDUINO_LIB_DIR}/${subdir}/${subdir}.cpp")
+    set(LIB_FILE "${ARDUINO_LIB_DIR}/${subdir}${ARDUINO_LIB_PATH_SRC}/${subdir}.cpp")
     if(EXISTS ${LIB_FILE})
       set(ARDUINO_LIB_FILES ${ARDUINO_LIB_FILES} ${LIB_FILE})
-      include_directories("${ARDUINO_LIB_DIR}/${subdir}")
+      include_directories("${ARDUINO_LIB_DIR}/${subdir}${ARDUINO_LIB_PATH_SRC}")
     else()
       message(SEND_ERROR "Could not find header file of Arduino library: ${subdir}")
     endif()
   endforeach()
 
   # TODO: workaround for twi.h
-  set(LIB_FILE "${ARDUINO_LIB_DIR}/Wire/utility/twi.c")
+  set(LIB_FILE "${ARDUINO_LIB_DIR}/Wire${ARDUINO_LIB_PATH_SRC}/utility/twi.c")
   set(ARDUINO_LIB_FILES ${ARDUINO_LIB_FILES} ${LIB_FILE})
-  include_directories("${ARDUINO_LIB_DIR}/Wire/utility")
+  include_directories("${ARDUINO_LIB_DIR}/Wire${ARDUINO_LIB_PATH_SRC}/utility")
 
 else()
   message(SEND_ERROR "Could not find Arduino library dir.")

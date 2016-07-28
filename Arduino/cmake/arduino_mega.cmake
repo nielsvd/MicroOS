@@ -6,8 +6,9 @@ set(ARDUINO_UPLOAD_SPEED "115200")
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_C_COMPILER ${ARDUINO_TOOLS_DIR}/avr-gcc)
 set(CMAKE_CXX_COMPILER ${ARDUINO_TOOLS_DIR}/avr-g++)
+set(CMAKE_ASM_COMPILER ${ARDUINO_TOOLS_DIR}/avr-gcc)
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
-# enable_language(ASM)
+enable_language(ASM)
 
 set(SPEC_FLAGS "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums")
 
@@ -15,6 +16,7 @@ set(SPEC_FLAGS "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 # set(CMAKE_CXX_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -Os")
 set(CMAKE_CXX_FLAGS "-mmcu=${ARDUINO_MCU} -DF_CPU=${ARDUINO_FCPU} -DARDUINO=103 -Os")
 set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} ${SPEC_FLAGS} -w -std=gnu99")
+set(CMAKE_ASM_FLAGS "${CMAKE_CXX_FLAGS} ${SPEC_FLAGS} -w -std=gnu99")
 
 set(AVRDUDE_CONFIG "$ENV{ARDUINO_ROOT}/hardware/tools/avr/etc/avrdude.conf")
 
