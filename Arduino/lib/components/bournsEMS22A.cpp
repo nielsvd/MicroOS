@@ -22,6 +22,10 @@ static unsigned char      sensor_s4;         /* Increase in magnitude */
 static unsigned char      sensor_s5;         /* Decrease in magnitude */
 static bool               sensor_data_valid; /* Data validity based on parity bit */
 
+BournsEMS22A::BournsEMS22A(uint8_t ID) : Sensor1D(ID) {
+
+}
+
 void BournsEMS22A::setup_timer() {
 
   cli();//stop interrupts
@@ -49,12 +53,13 @@ void BournsEMS22A::setup_pins() {
   pinMode(BOURNS_PIN_CS,  OUTPUT);
 }
 
-void BournsEMS22A::setup() {
+bool BournsEMS22A::init() {
   setup_timer();
   setup_pins();
+  return true;
 }
 
-int BournsEMS22A::get_position() {
+int BournsEMS22A::readRawValue() {
   return sensor_d;
 }
 

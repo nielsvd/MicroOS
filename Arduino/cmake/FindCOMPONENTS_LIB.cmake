@@ -1,8 +1,8 @@
 # define and include header files of components library
 set(COMPONENTS_LIB_FILES
-  absolute_encoder_bourns
   AF_motorshield
   analog_sensor
+  bournsEMS22A
   component_interface
   difference_sensor
   easydriver_stepper

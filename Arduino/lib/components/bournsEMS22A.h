@@ -1,10 +1,13 @@
 #ifndef BOURNSEMS22A_H
 #define BOURNSEMS22A_H
 
-class BournsEMS22A {
+#include "sensor1D.h"
+
+class BournsEMS22A : public Sensor1D {
   public:
-    void setup();
-    int get_position();
+    BournsEMS22A(uint8_t ID = 0);
+    bool init();
+    int readRawValue();
     int get_status1();
     int get_status2();
     int get_status3();
