@@ -3,6 +3,7 @@ set(COMPONENTS_LIB_FILES
   AF_motorshield
   analog_sensor
   bournsEMS22A
+  bournsEMS22D
   component_interface
   difference_sensor
   easydriver_stepper

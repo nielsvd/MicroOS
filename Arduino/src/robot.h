@@ -17,6 +17,7 @@
 // #include "AF_motorshield.h"  // Adafruit motor shield v1 library
 #include "led.h"
 #include "bournsEMS22A.h"
+#include "bournsEMS22D.h"
 #include "vishay157.h"
 
 class Robot {
@@ -32,8 +33,9 @@ class Robot {
     // Sensor1D* _distance2;
     LED* _LED1;
     LED* _LED2;
-    Sensor1D* _pendulum_potmeter;
-    Sensor1D* _pendulum_encoder;
+    // Sensor1D* _pendulum_potmeter;
+    // Sensor1D* _pendulum_abs_encoder;
+    Sensor1D* _pendulum_rel_encoder;
 
     // Kalman variables
     // float p11,p12,p13,p21,p22,p23,p31,p32,p33;

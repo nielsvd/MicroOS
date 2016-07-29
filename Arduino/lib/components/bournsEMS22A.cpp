@@ -14,13 +14,13 @@
 #define BOURNS_PIN_DO 26
 #define BOURNS_PIN_CS 28
 
-static unsigned short int sensor_d;          /* Absolute angular position data */
-static unsigned char      sensor_s1;         /* End of offset compensation algorithm */
-static unsigned char      sensor_s2;         /* Cordic overflow indicating an error in cordic plant */
-static unsigned char      sensor_s3;         /* Linearity alarm */
-static unsigned char      sensor_s4;         /* Increase in magnitude */
-static unsigned char      sensor_s5;         /* Decrease in magnitude */
-static bool               sensor_data_valid; /* Data validity based on parity bit */
+volatile unsigned short int sensor_d;          /* Absolute angular position data */
+volatile unsigned char      sensor_s1;         /* End of offset compensation algorithm */
+volatile unsigned char      sensor_s2;         /* Cordic overflow indicating an error in cordic plant */
+volatile unsigned char      sensor_s3;         /* Linearity alarm */
+volatile unsigned char      sensor_s4;         /* Increase in magnitude */
+volatile unsigned char      sensor_s5;         /* Decrease in magnitude */
+volatile bool               sensor_data_valid; /* Data validity based on parity bit */
 
 BournsEMS22A::BournsEMS22A(uint8_t ID) : Sensor1D(ID) {
 
