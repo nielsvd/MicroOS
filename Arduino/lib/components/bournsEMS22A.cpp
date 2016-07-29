@@ -14,13 +14,13 @@
 #define BOURNS_PIN_DO 26
 #define BOURNS_PIN_CS 28
 
-volatile unsigned short int sensor_d;          /* Absolute angular position data */
-volatile unsigned char      sensor_s1;         /* End of offset compensation algorithm */
-volatile unsigned char      sensor_s2;         /* Cordic overflow indicating an error in cordic plant */
-volatile unsigned char      sensor_s3;         /* Linearity alarm */
-volatile unsigned char      sensor_s4;         /* Increase in magnitude */
-volatile unsigned char      sensor_s5;         /* Decrease in magnitude */
-volatile bool               sensor_data_valid; /* Data validity based on parity bit */
+static volatile unsigned short int sensor_d;          /* Absolute angular position data */
+static volatile unsigned char      sensor_s1;         /* End of offset compensation algorithm */
+static volatile unsigned char      sensor_s2;         /* Cordic overflow indicating an error in cordic plant */
+static volatile unsigned char      sensor_s3;         /* Linearity alarm */
+static volatile unsigned char      sensor_s4;         /* Increase in magnitude */
+static volatile unsigned char      sensor_s5;         /* Decrease in magnitude */
+static volatile bool               sensor_data_valid; /* Data validity based on parity bit */
 
 BournsEMS22A::BournsEMS22A(uint8_t ID) : Sensor1D(ID) {
 
@@ -34,11 +34,11 @@ void BournsEMS22A::setup_timer() {
   TCCR3A = 0;// set entire TCCR3A register to 0
   TCCR3B = 0;// same for TCCR3B
   TCNT3  = 0;//initialize counter value to 0
-  // set compare match register for 2MHz increments
+  // set compare match register for 1kHz increments
   OCR3A = 15;// = (16*10^6) / (2*10^6*1) - 1 (must be <2^8)
   // turn on CTC mode
   TCCR3B |= (1 << WGM32);
-  // Set CCS30 bits for 1024 prescaler
+  // Set CCS30 and CS32 bits for 1024 prescaler
   TCCR3B |= (1 << CS30) | (1 << CS32);
   // enable timer compare interrupt
   TIMSK3 |= (1 << OCIE3A);
