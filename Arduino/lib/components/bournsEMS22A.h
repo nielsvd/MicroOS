@@ -8,13 +8,14 @@ class BournsEMS22A : public Sensor1D {
     BournsEMS22A(uint8_t ID = 0);
     bool init();
     int readRawValue();
-    int get_status1();
-    int get_status2();
-    int get_status3();
-    int get_status4();
-    int get_status5();
-    bool get_data_validity();
+    float readCalibratedValue();
   private:
+    char get_status1();
+    char get_status2();
+    char get_status3();
+    char get_status4();
+    char get_status5();
+    bool get_data_validity();
     void setup_timer();
     void setup_pins();
 };
